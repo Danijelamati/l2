@@ -1,0 +1,14 @@
+.list-pagination{
+    display: flex;
+    justify-content: flex-end;
+}
+.list-element-number{
+    display: flex;
+    align-items: center;
+}
+.list-element-number-input{
+    height: 50%;
+    width: 5%;
+    -webkit-appearance: none; 
+    -moz-appearance: textfield;
+}

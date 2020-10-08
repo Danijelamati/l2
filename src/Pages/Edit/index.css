@@ -1,0 +1,8 @@
+.edit{
+    width: 50%;
+    margin: auto;
+}
+.edit-list-item{
+    display: flex;
+    flex-direction: column;
+}
