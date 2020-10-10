@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react';
 import React from 'react';
 
-import { useAppStore } from '../../App';
+import { useAppStore } from '../../Store/appStore';
 import ListItem from '../../Components/ListItem';
 
 import './TableContent.css';
@@ -11,16 +11,17 @@ const TableContent = observer(() => {
     const appStore = useAppStore();  
 
     return (
-       <div className={"table"}>           
-           {
+      <div className="table">           
+        {
               appStore.getList().map( e => (
-              <ListItem 
-                key={e.id}
-                item={e} 
-                editLink={"/edit"}
-              />)) 
+                <ListItem 
+                  key={e.id}
+                  item={e} 
+                  editLink="/edit"
+                />
+)) 
            }
-       </div>
+      </div>
     );
 });
 

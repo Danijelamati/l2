@@ -14,7 +14,6 @@ export default function quickSort(data, property) {
             greater.push(e);
             continue;
         }
-
         if(e[property] < data[0][property]){
             lesser.push(e);
             continue;

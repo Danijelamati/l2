@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useAppStore } from '../../App';
+import { useAppStore } from '../../Store/appStore';
 import ListNavigation from './ListNavigation';
 
 import './Paginations.css';
@@ -14,18 +14,18 @@ function Pagination () {
     };
 
     return (
-        <div className={"list-pagination"}>
-            <div className={"list-element-number"}>
-                <p>Number of elements per page:</p>
-                <input
-                     className={"list-element-number-input"} 
-                     type={"number"} 
-                     onChange={event => submitElementNumber(appStore, event.target.value)} 
-                     defaultValue={appStore.listOptions.elementsPerPage}
-                />
-            </div> 
-            <ListNavigation />                       
-        </div>
+      <div className="list-pagination">
+        <div className="list-element-number">
+          <p>Number of elements per page:</p>
+          <input
+            className="list-element-number-input" 
+            type="number" 
+            onChange={event => submitElementNumber(appStore, event.target.value)} 
+            defaultValue={appStore.listOptions.elementsPerPage}
+          />
+        </div> 
+        <ListNavigation />                       
+      </div>
     );
 };
 

@@ -1,88 +1,97 @@
 import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { useLocalObservable, Observer } from 'mobx-react';
+import PropTypes from 'prop-types';
+
 
 import ListItem from '../../Components/ListItem';
-import { useAppStore } from '../../App';
-import compareObjects from '../../Common/util/compareObjects';
+import compareObjects from '../../Common/util/compareObjects';import { useAppStore } from '../../Store/appStore';
 
 import EditFields from './EditFields';
 import EditProps from './EditProps';
 
 import './index.css';
 
-function Edit (props) {
 
-    const appStore = useAppStore();  
+function Edit ({location}) {
+
+    const { editProps } = location; 
+    
+    const appStore = useAppStore(); 
 
     const [redirect, setRedirect] = useState(false);
     
     const editStore = useLocalObservable(() => ({
-        editCaracter : {...props.location.editProps},
-        setCaracterProperty(value,property){
-            this.editCaracter[property] = value;
-        },
-        setCaracterSpecies(makeId, makeName, makeAbrv){
-            this.editCaracter.makeId = makeId;
-            this.editCaracter.makeName = makeName;
-            this.editCaracter.makeAbrv = makeAbrv;
-        },
-        setRedirect(){
-            this.redirect = true;
-            console.log("here")
-        }
+        editCaracter : {...editProps},
+        setCaracterProperty(property, value){
+          this.editCaracter[property] = value;
+        }        
     }));
 
-    const saveCaracter = ( propCaracter, editStore, appStore, setRedirect) => {
-        console.log(editStore.editCaracter)
-        if(compareObjects(propCaracter, editStore.editCaracter)){
-            setRedirect(true);
+    const saveCaracter = ( propCaracter, eStore, aStore, setRed) => {
+        
+        if(compareObjects(propCaracter, eStore.editCaracter)){
+            setRed(true);
             return;
         }
-        appStore.editCaracter(editStore.editCaracter);
-        setRedirect(true);
+        aStore.editCaracter(eStore.editCaracter);
+        setRed(true);
     };  
 
     return (
-        <>
-            {        
-                !props.location.editProps || redirect ? <Redirect to={"/list"} />
-                :
-                <div className={"edit"}>
+      <>
+        {        
+                !editProps || redirect ? <Redirect to="/list" />
+                : (
+                  <div className="edit">
                     <EditFields 
-                        fullCaracter={props.location.editProps} 
-                        editStore={editStore}
+                      editProps={editProps}
+                      editStore={editStore}
                     />
                     <p>Preview:</p>      
-                    <div className={"edit-list-item"}>
-                        <EditProps /> 
-                        <Observer>
-                            {()=>
-                                <ListItem
-                                    item={{
-                                        id:editStore.editCaracter.id, 
-                                        name: editStore.editCaracter.name,
-                                        abrv: editStore.editCaracter.abrv,
-                                        makeName: editStore.editCaracter.makeName,
-                                        makeAbrv: editStore.editCaracter.makeAbrv
-                                    }}                     
-                                    key={editStore.editCaracter.id}
-                                />
-                            }                        
-                        </Observer> 
+                    <div className="edit-list-item">
+                      <EditProps /> 
+                      <Observer>
+                        {()=> (
+                          <ListItem
+                            item={{
+                            id: editStore.editCaracter.id,
+                            makeId: editStore.editCaracter.makeId, 
+                            name: editStore.editCaracter.name,
+                            abrv: editStore.editCaracter.abrv,
+                            makeName: editStore.editCaracter.makeName,
+                            makeAbrv: editStore.editCaracter.makeAbrv
+                          }}                     
+                            key={editStore.editCaracter.id}
+                          />
+                      )}                        
+                      </Observer> 
                     </div>
                     <div>
-                        <button onClick={() => saveCaracter(props.location.editProps, editStore, appStore, setRedirect)}>
-                            Save
-                        </button>
-                        <button onClick={() => setRedirect(true)}>
-                            Cancel
-                        </button> 
+                      <button 
+                        onClick={() => saveCaracter(editProps, editStore, appStore, setRedirect)}                        
+                        type="button"
+                      >
+                        Save
+                      </button>                    
+                      <button
+                        onClick={() => setRedirect(true)}                         
+                        type="button"
+                      >
+                        Cancel
+                      </button>                 
                     </div>        
-                </div>
-            }            
-        </>
+                  </div>
+              )
+}            
+      </>
     );
+};
+
+Edit.propTypes = {  
+  location: PropTypes.shape({
+    editProps: PropTypes.shape().isRequired
+  }).isRequired
 };
 
 export default Edit;

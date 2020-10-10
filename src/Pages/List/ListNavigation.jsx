@@ -1,7 +1,7 @@
 import React from 'react';
 import { observer } from 'mobx-react';
 
-import { useAppStore } from '../../App';
+import { useAppStore } from '../../Store/appStore';
 
 import './ListNavigation.css';
 
@@ -15,21 +15,25 @@ const ListNavigation = observer(() =>{
     };
 
     return (
-        <div className={"list-navigation"}>
-                <button 
-                    name={"pageDown"} 
-                    className={"list-navigation-button"} 
-                    onClick={(event) => handlePage(event,appStore)}>
-                        {"<"}
-                </button>
-                <p>{appStore.listOptions.page}</p>
-                <button 
-                    name={"pageUp"} 
-                    className={"list-navigation-button"} 
-                    onClick={(event) => handlePage(event,appStore)}>
-                        {">"}
-                </button>
-        </div>
+      <div className="list-navigation">
+        <button 
+          name="pageDown" 
+          className="list-navigation-button" 
+          onClick={(event) => handlePage(event,appStore)}
+          type="button"
+        >
+          {"<"}
+        </button>
+        <p>{appStore.listOptions.page}</p>
+        <button 
+          name="pageUp" 
+          className="list-navigation-button" 
+          onClick={(event) => handlePage(event,appStore)}
+          type="button"
+        >
+          {">"}
+        </button>
+      </div>
     );
 });
 

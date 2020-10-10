@@ -1,4 +1,5 @@
 import { makeAutoObservable } from "mobx";
+import { createContext, useContext } from 'react';
 
 import { Caracter, FullCaracter } from '../Common/models/models';
 import quickSort from '../Common/util/quickSort';
@@ -94,13 +95,18 @@ const appStore = () => {
     },
     filterList(value){
 
-      const regex = new RegExp(value, "gi");
+      const regex = new RegExp(value, "gi");      
+      const keys = Object
+        .keys(new FullCaracter())
+        .filter(key => key !== "id" && key !== "makeId");
+        
       this.list = this.fullList.filter(e => {
         for (let param in e){
-          if(param === "id"){
+          
+          if(!keys.includes(param)){
             continue;
           }
-
+  
           if(e[param].match(regex)){
             return true;
           }
@@ -128,5 +134,12 @@ const appStore = () => {
   });
 };
 
+const AppContext = createContext();
 
-export default appStore;
+const useAppStore = () => useContext(AppContext);
+
+export {
+  appStore,
+  AppContext,
+  useAppStore
+};

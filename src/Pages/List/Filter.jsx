@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAppStore } from '../../App';
+import { useAppStore } from '../../Store/appStore';
 
 import './Filter.css';
 
@@ -13,14 +13,15 @@ const Filter = () => {
     };
 
     return (
-        <div className={"filter"}>
-            <p className={"filter-para"}>Filter:</p>
-            <input 
-                className={"filter-input"} 
-                type={"text"} 
-                onChange={event => handleFilter(event)} 
-            />
-        </div>
+      <div className="filter">
+        <p className="filter-para">Filter:</p>
+        <input 
+          className="filter-input" 
+          type="text" 
+          onChange={event => handleFilter(event)}
+          defaultValue={appStore.listOptions.filter}
+        />
+      </div>
     );
 };
 

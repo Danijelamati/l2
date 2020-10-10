@@ -3,14 +3,15 @@ import { nanoid } from 'nanoid';
 
 import fetchFromStarWarsApi from '../../Common/util/fetchFromStarWarsApi';
 import { Caracter, Species } from '../../Common/models/models';
-import { useAppStore } from '../../App';
+import { useAppStore } from '../../Store/appStore';
 
 import Filter from './Filter';
 import TableContent from './TableContent';
 import TableHeader from './TableHeader';
+import Pagination from './Pagination';
 
 import './index.css';
-import Pagination from './Pagination';
+
 
 function List() {
 
@@ -26,7 +27,6 @@ function List() {
             }
 
             (async () => {
-                console.log("list useEffect hit");
 
                 const makefakeAbrv = (string) => {
                     return `${string[0]}${string[Math.trunc(string.length/2)]}${string[string.length-1]}`.toUpperCase().replace(" ", "C");
@@ -39,7 +39,7 @@ function List() {
                 fetchedSpecies = fetchedSpecies.map(e => {
                     const id = nanoid();
                     speciesIdCollection.set(i, id);
-                    i++;
+                    i+=1;
                     return new Species(
                         id, 
                         e.name, 
@@ -68,19 +68,20 @@ function List() {
       );
 
     return (
-        <>
-            {
+      <>
+        {
                 !loaded ? 
-                <p>loading.....</p>
-                :
-                <div className={"list"}>                    
+                  <p>loading.....</p>
+                : (
+                  <div className="list">                    
                     <Filter />
                     <TableHeader />                    
                     <TableContent />
                     <Pagination />
-                </div>                              
-            }            
-        </>
+                  </div>
+              )
+}            
+      </>
     );
 };
 
