@@ -1,28 +1,27 @@
 import { observer } from 'mobx-react';
 import React from 'react';
 
-import { useAppStore } from '../../Store/appStore';
+import { useRootStore } from '../../Store/RootStore';
 import ListItem from '../../Components/ListItem';
 
 import './TableContent.css';
 
-const TableContent = observer(() => {    
+const TableContent = observer(() => {
+  const { listStore } = useRootStore();
 
-    const appStore = useAppStore();  
-
-    return (
-      <div className="table">           
-        {
-              appStore.getList().map( e => (
-                <ListItem 
+  return (
+    <div className="table">
+      {
+              listStore.list.map((e) => (
+                <ListItem
                   key={e.id}
-                  item={e} 
+                  item={e}
                   editLink="/edit"
                 />
-)) 
-           }
-      </div>
-    );
+              ))
+        }
+    </div>
+  );
 });
 
 export default TableContent;

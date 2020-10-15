@@ -1,32 +1,32 @@
 import React from 'react';
 
-import { useAppStore } from '../../Store/appStore';
+import { useRootStore } from '../../Store/RootStore';
+
 import ListNavigation from './ListNavigation';
 
 import './Paginations.css';
 
-function Pagination () {
+function Pagination() {
+  const { appStore } = useRootStore();
 
-    const appStore = useAppStore();
+  const submitElements = (event, aStore) => {
+    aStore.setElements(parseInt(event.target.value, 10));
+  };
 
-    const submitElementNumber = (store, value) => {
-        store.setElements(parseInt(value, 10));
-    };
-
-    return (
-      <div className="list-pagination">
-        <div className="list-element-number">
-          <p>Number of elements per page:</p>
-          <input
-            className="list-element-number-input" 
-            type="number" 
-            onChange={event => submitElementNumber(appStore, event.target.value)} 
-            defaultValue={appStore.listOptions.elementsPerPage}
-          />
-        </div> 
-        <ListNavigation />                       
+  return (
+    <div className="list-pagination">
+      <div className="list-element-number">
+        <p>Number of elements per page:</p>
+        <input
+          className="list-element-number-input"
+          type="number"
+          onChange={(event) => submitElements(event, appStore)}
+          defaultValue={appStore.listOptions.elementsPerPage}
+        />
       </div>
-    );
-};
+      <ListNavigation />
+    </div>
+  );
+}
 
 export default Pagination;

@@ -1,40 +1,41 @@
 import React from 'react';
-import { Route, BrowserRouter as Router, Switch, Redirect} from 'react-router-dom';
+import {
+  Route, BrowserRouter as Router, Switch, Redirect,
+} from 'react-router-dom';
 
-import { appStore, AppContext } from './Store/appStore'; 
+import { RootStore, RootContext } from './Store/RootStore';
 
 import Edit from './Pages/Edit';
 import List from './Pages/List';
 
 import './App.css';
 
-function ToList (){
+function ToList() {
   return <Redirect to="/list" />;
 }
 
-function App() { 
-  
-  return (    
-    <Router>
-      <Switch>
-        <AppContext.Provider value={appStore()}>
-          <Route 
-            path="/edit" 
+function App() {
+  return (
+    <RootContext.Provider value={new RootStore()}>
+      <Router>
+        <Switch>        
+          <Route
+            path="/edit"
             exact
             component={Edit}
           />
-          <Route 
-            path="/list" 
+          <Route
+            path="/list"
             exact
             component={List}
-          /> 
+          />
           <Route
             path="/"
             component={ToList}
-          />          
-        </AppContext.Provider>        
-      </Switch>
-    </Router>           
+          />        
+        </Switch>
+      </Router>
+    </RootContext.Provider>
   );
 }
 
