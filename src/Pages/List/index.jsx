@@ -1,48 +1,48 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect} from 'react';
+import { Observer } from 'mobx-react';
 
 import { useRootStore } from '../../Store/RootStore';
 
 import Filter from './Filter';
 import TableContent from './TableContent';
 import TableHeader from './TableHeader';
-import Pagination from './Pagination';
+import Elements from './Elements';
 
 import './index.css';
 
 function List() {
-  const { listStore } = useRootStore();
-
-  const [loaded, setLoaded] = useState(false);
+  const { listPageStore, listStore } = useRootStore();
 
   useEffect(
     () => {
-      if (listStore.list.length > 0) {
-        setLoaded(true);
+      if(listPageStore.loaded){
         return;
       }
-
+      if (listStore.list.length > 0) {
+        listPageStore.setLoaded(true);
+        return;
+      }
       (async () => {
-        await listStore.fetchList();
-        setLoaded(true);
+        await listPageStore.initialise();
       })();
-    }, [listStore],
+    }, [listPageStore, listStore],
   );
 
   return (
-    <>
-      {
-                !loaded
+    <Observer>
+      { () => (
+                !listPageStore.loaded
                   ? <p>loading.....</p>
                   : (
                     <div className="list">
                       <Filter />
                       <TableHeader />
                       <TableContent />
-                      <Pagination />
+                      <Elements />
                     </div>
                   )
-      }
-    </>
+       ) }
+    </Observer>
   );
 }
 

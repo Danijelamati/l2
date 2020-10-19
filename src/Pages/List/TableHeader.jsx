@@ -5,10 +5,10 @@ import { useRootStore } from '../../Store/RootStore';
 import './TableHeader.css';
 
 function TableHeader() {
-  const { appStore } = useRootStore();
+  const { listPageStore } = useRootStore();
 
   const handleClick = (value) => {
-    appStore.setOrderBy(value);
+    listPageStore.setOrderBy(value);
   };
 
   return (

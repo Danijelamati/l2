@@ -19,7 +19,7 @@ const TableContent = observer(() => {
                   editLink="/edit"
                 />
               ))
-        }
+      }
     </div>
   );
 });

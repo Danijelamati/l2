@@ -1,22 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { useRootStore } from '../../Store/RootStore';
+
 import './EditFields.css';
 
 function EditFields(props) {
-  const { editStore, editProps } = props;
+  const { caracter } = props;
 
-  const handleChange = (event, eStore) => {
-    eStore.setCaracterProperty(event.target.name, event.target.value);
-  };
-
-  const handleSelect = (event, eStore) => {
-    const getSpecies = eStore.species.find((s) => s.id === event.target.value);
-
-    eStore.setCaracterProperty('makeId', getSpecies.id);
-    eStore.setCaracterProperty('makeName', getSpecies.name);
-    eStore.setCaracterProperty('makeAbrv', getSpecies.abrv);
-  };
+  const { editPageStore,speciesStore } = useRootStore();
 
   return (
     <div className="edit-fields">
@@ -25,8 +17,8 @@ function EditFields(props) {
         <input
           className="edit-input"
           type="text"
-          onChange={(event) => handleChange(event, editStore)}
-          defaultValue={editProps.name}
+          onChange={(event) => editPageStore.editCaracter("name", event.target.value)}
+          defaultValue={caracter.name}
           name="name"
         />
       </div>
@@ -35,15 +27,15 @@ function EditFields(props) {
         <input
           className="edit-input"
           type="text"
-          onChange={(event) => handleChange(event, editStore)}
-          defaultValue={editProps.abrv}
+          onChange={(event) => editPageStore.editCaracter("abrv", event.target.value)}
+          defaultValue={caracter.abrv}
           name="abrv"
         />
       </div>
       <div>
         <p>Select species</p>
-        <select onChange={(event) => handleSelect(event, editStore)}>
-          {editStore.species.map((e) => <option key={e.id} value={e.id}>{e.name}</option>)}
+        <select onChange={(event) => editPageStore.selectSpecies(event.target.value)}>
+          {speciesStore.species.map((e) => <option key={e.id} value={e.id}>{e.name}</option>)}
         </select>
       </div>
     </div>
@@ -51,8 +43,7 @@ function EditFields(props) {
 }
 
 EditFields.propTypes = {
-  editStore: PropTypes.shape().isRequired,
-  editProps: PropTypes.shape().isRequired,
+  caracter: PropTypes.shape().isRequired,
 };
 
 export default EditFields;

@@ -4,7 +4,7 @@ import { useRootStore } from '../../Store/RootStore';
 import './Filter.css';
 
 const Filter = () => {
-  const { appStore } = useRootStore();
+  const { listPageStore } = useRootStore();
 
   return (
     <div className="filter">
@@ -12,8 +12,8 @@ const Filter = () => {
       <input
         className="filter-input"
         type="text"
-        onChange={(event) => appStore.setFilter(event.target.value)}
-        defaultValue={appStore.listOptions.filter}
+        onChange={(event) => listPageStore.setFilter(event.target.value)}
+        defaultValue={listPageStore.listOptions.filter}
       />
     </div>
   );

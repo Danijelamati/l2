@@ -8,7 +8,7 @@ function ListItem({ item, editLink }) {
   const {
     id, makeId, makeName, makeAbrv, name, abrv,
   } = item;
-
+ 
   return (
     <div className="listItem">
       <p className="item">{makeName}</p>
@@ -20,7 +20,7 @@ function ListItem({ item, editLink }) {
                 <Link
                   to={{
                     pathname: editLink,
-                    editProps: {
+                    caracter: {
                       id,
                       makeId,
                       makeName,
