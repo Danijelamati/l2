@@ -7,8 +7,10 @@ import { RootStore, RootContext } from './Store/RootStore';
 
 import Edit from './Pages/Edit';
 import List from './Pages/List';
+import Create from './Pages/Create';
 
 import './App.css';
+
 
 function ToList() {
   return <Redirect to="/list" />;
@@ -28,6 +30,11 @@ function App() {
             path="/list"
             exact
             component={List}
+          />
+          <Route
+            path="/create"
+            exact
+            component={Create}
           />
           <Route
             path="/"

@@ -1,35 +1,21 @@
 import firebase from './firebase';
 
-import { Caracter, FullCaracter } from '../models/models';
-import compareObjects from './compareObjects';
+import { Caracter } from '../models/models';
 
-export default async (propCaracter, editCaracter) => {
-    if (compareObjects(propCaracter, editCaracter)) {        
-        return false;
-      }
+export default async (fullCaracter) => {
   
-      const fullCar = new FullCaracter(
-        editCaracter.id,
-        editCaracter.makeId,
-        editCaracter.makeName,
-        editCaracter.makeAbrv,
-        editCaracter.name,
-        editCaracter.abrv,
-      );
-      fullCar.setFilter();
-  
-      const car = new Caracter(
-        editCaracter.id,
-        editCaracter.makeId,
-        editCaracter.name,
-        editCaracter.abrv,
+      const caracter = new Caracter(
+        fullCaracter.id,
+        fullCaracter.makeId,
+        fullCaracter.name,
+        fullCaracter.abrv,
       );
 
       const db = firebase.firestore();
   
-      await db.collection('caracters').doc(car.id).set({ ...car });
+      await db.collection('caracters').doc(caracter.id).set({ ...caracter });
   
-      await db.collection('list').doc(fullCar.id).set({ ...fullCar });
-      
+      await db.collection('list').doc(fullCaracter.id).set({ ...fullCaracter });
+     
       return true;
 };

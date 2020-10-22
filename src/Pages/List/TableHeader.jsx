@@ -7,35 +7,35 @@ import './TableHeader.css';
 function TableHeader() {
   const { listPageStore } = useRootStore();
 
-  const handleClick = (value) => {
-    listPageStore.setOrderBy(value);
+  const handleClick = (value, listPgStore) => {
+    listPgStore.setOrderBy(value);
   };
 
   return (
-    <div className="table-header">
+    <div className="table-header">      
       <h3
         className="table-header-names"
-        onClick={() => handleClick('makeName')}
-      >
-        Species
-      </h3>
-      <h3
-        className="table-header-names"
-        onClick={() => handleClick('makeAbrv')}
-      >
-        Species Abrv
-      </h3>
-      <h3
-        className="table-header-names"
-        onClick={() => handleClick('name')}
+        onClick={() => handleClick('name', listPageStore)}
       >
         Caracter
       </h3>
       <h3
         className="table-header-names"
-        onClick={() => handleClick('abrv')}
+        onClick={() => handleClick('abrv', listPageStore)}
       >
         Caracter Abrv
+      </h3>
+      <h3
+        className="table-header-names"
+        onClick={() => handleClick('makeName', listPageStore)}
+      >
+        Species
+      </h3>
+      <h3
+        className="table-header-names"
+        onClick={() => handleClick('makeAbrv', listPageStore)}
+      >
+        Species Abrv
       </h3>
       <h3 className="table-header-names">Edit</h3>
     </div>

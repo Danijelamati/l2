@@ -3,86 +3,50 @@ import { Redirect } from 'react-router-dom';
 import { Observer } from 'mobx-react';
 import PropTypes from 'prop-types';
 
-import ListItem from '../../Components/ListItem';
 import { useRootStore } from '../../Store/RootStore';
-import saveCaracter from '../../Common/util/saveCaracter';
 
-import EditFields from './EditFields';
-import EditProps from './EditProps';
+import CaracterEdit from './CaracterEdit';
+import SpeciesEdit from './SpeciesEdit';
 
 import './index.css';
+import EditFields from './EditFields';
 
 function Edit({ location }) {
-  const { caracter } = location;
+  const { caracter, species } = location;
  
-  const { listPageStore, editPageStore, editCaracterStore } = useRootStore();
+  const { editPageStore } = useRootStore();
 
   const [redirect, setRedirect] = useState(false); 
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     
     (async () => {      
-      if(!caracter){
+      if(!caracter && !species){
         setRedirect(true);
         return;
       }
-      await editPageStore.loading(caracter);     
+      if(caracter){
+        await editPageStore.initialise("caracter" ,caracter);  
+      }else{
+        await editPageStore.initialise("species" ,species); 
+      }
+         
+      setLoaded(true);
       
     })();
-  }, [editPageStore, caracter]);
-
-  const handleSave = async (propCaracter, edCarStore, lPageStore, setRed) => {
-    console.log("hit")
-    const changed = await saveCaracter(propCaracter, edCarStore.editCaracter);
-    console.log(changed)
-    if(changed){
-      lPageStore.resetOptions();
-    }
-    
-    setRed(true);
-  };
+  }, [editPageStore, caracter, species]);  
 
   return (
     <Observer>
       { () => (
-                !caracter || redirect ? <Redirect to="/list" />
-                  : editPageStore.loaded
+                (!caracter && !species) || redirect ? <Redirect to="/list" />
+                  : loaded
                 && (
                   <div className="edit">
-                    <EditFields
-                      caracter={caracter}
-                    />
-                    <p>Preview:</p>
-                    <div className="edit-list-item">
-                      <EditProps />                      
-                      <ListItem
-                        item={{
-                              id: editCaracterStore.editCaracter.id,
-                              makeId: editCaracterStore.editCaracter.makeId,
-                              name: editCaracterStore.editCaracter.name,
-                              abrv: editCaracterStore.editCaracter.abrv,
-                              makeName: editCaracterStore.editCaracter.makeName,
-                              makeAbrv: editCaracterStore.editCaracter.makeAbrv,
-                            }}
-                        key={editCaracterStore.editCaracter.id}
-                      />                    
-                    </div>
-                    <div>
-                      <button
-                        onClick={() => handleSave(caracter, editCaracterStore, listPageStore, setRedirect)}
-                        type="button"
-                      >
-                        Save
-                      </button>
-                      <button
-                        onClick={() => {
-                          setRedirect(true);
-                        }}
-                        type="button"
-                      >
-                        Cancel
-                      </button>
-                    </div>
+                    <EditFields />
+                    {editPageStore.mode === "caracter" && <CaracterEdit caracter={caracter} setRedirect={setRedirect} />}
+                    {editPageStore.mode === "species" && <SpeciesEdit species={species} setRedirect={setRedirect} />}                    
                   </div>
                 )
       )}
@@ -93,6 +57,7 @@ function Edit({ location }) {
 Edit.propTypes = {
   location: PropTypes.shape({
     caracter: PropTypes.shape(),
+    species: PropTypes.shape()
   }),
 };
 

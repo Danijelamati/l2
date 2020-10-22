@@ -5,10 +5,9 @@ import { useRootStore } from '../../Store/RootStore';
 
 import './EditFields.css';
 
-function EditFields(props) {
-  const { caracter } = props;
+function EditFields() {
 
-  const { editPageStore,speciesStore } = useRootStore();
+  const { editPageStore, speciesStore } = useRootStore();
 
   return (
     <div className="edit-fields">
@@ -17,8 +16,8 @@ function EditFields(props) {
         <input
           className="edit-input"
           type="text"
-          onChange={(event) => editPageStore.editCaracter("name", event.target.value)}
-          defaultValue={caracter.name}
+          onChange={(event) => editPageStore.input("name", event.target.value)}
+          defaultValue={""}
           name="name"
         />
       </div>
@@ -27,23 +26,28 @@ function EditFields(props) {
         <input
           className="edit-input"
           type="text"
-          onChange={(event) => editPageStore.editCaracter("abrv", event.target.value)}
-          defaultValue={caracter.abrv}
+          onChange={(event) => editPageStore.input("abrv", event.target.value)}
+          defaultValue={""}
           name="abrv"
         />
       </div>
-      <div>
-        <p>Select species</p>
-        <select onChange={(event) => editPageStore.selectSpecies(event.target.value)}>
-          {speciesStore.species.map((e) => <option key={e.id} value={e.id}>{e.name}</option>)}
-        </select>
-      </div>
+      {
+        editPageStore.mode === "caracter" && (
+          <div>
+            <p>Select species</p>
+            <select onChange={(event) => editPageStore.selectSpecies(event.target.value)}>
+              {speciesStore.species.map((e) => <option key={e.id} value={e.id}>{e.name}</option>)}
+            </select>
+          </div>
+        )
+      }      
     </div>
   );
 }
 
 EditFields.propTypes = {
-  caracter: PropTypes.shape().isRequired,
+  caracter: PropTypes.shape(),
+  species: PropTypes.shape()
 };
 
 export default EditFields;

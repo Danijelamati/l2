@@ -8,13 +8,13 @@ function ListItem({ item, editLink }) {
   const {
     id, makeId, makeName, makeAbrv, name, abrv,
   } = item;
- 
+  
   return (
     <div className="listItem">
-      <p className="item">{makeName}</p>
-      <p className="item">{makeAbrv}</p>
       <p className="item">{name}</p>
       <p className="item">{abrv}</p>
+      <p className="item">{makeName}</p>
+      <p className="item">{makeAbrv}</p>      
       {
                 editLink && (
                 <Link

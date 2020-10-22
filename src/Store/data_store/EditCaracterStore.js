@@ -1,24 +1,34 @@
-import { makeAutoObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 
-export default () => {
-    return makeAutoObservable({
-        editCaracter: {},
-        setWholeCaracter(obj){
-            this.editCaracter = {...obj}
-        },
-        setCaracterProperty(property, value) {
-            this.editCaracter[property] = value;
-        },
-        setCaracterSpecies(species){  
+export default class EditCaracterStore{
+    
+    @observable editCaracter;
+    
+    constructor(){
+        makeObservable(this);
+    }
+    
+    @action
+    initialise(obj){
+            this.editCaracter = {...obj};
+    }
 
-            if(species.id === this.editCaracter.makeId){
-                return;
-            }
+    @action
+    setCaracterProperty(property, value) {
+        this.editCaracter[property] = value;
+    }
+
+    @action
+    setCaracterSpecies(species){  
+
+        if(species.id === this.editCaracter.makeId){
+            return;
+        }
             
-            this.setCaracterProperty('makeId', species.id);
-            this.setCaracterProperty('makeName', species.name);
-            this.setCaracterProperty('makeAbrv', species.abrv);
+        this.setCaracterProperty('makeId', species.id);
+        this.setCaracterProperty('makeName', species.name);
+        this.setCaracterProperty('makeAbrv', species.abrv);
             
-        }    
-    });
+    }    
+    
 };

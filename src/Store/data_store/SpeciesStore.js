@@ -1,23 +1,31 @@
-import { makeAutoObservable } from 'mobx';
+import { makeObservable, observable, action } from 'mobx';
 
 import firebase from '../../Common/util/firebase';
 
-export default () => {
-    return makeAutoObservable({
-        species: [],
-        async getSpecies() {
+export default class SpeciesStore {
+    
+    @observable species
+
+    constructor(){
+        makeObservable(this);
+        this.species = [];
+    }
+
+    @action
+    async setSpecies() {
             
-            const db = firebase.firestore();
+        const db = firebase.firestore();
 
-            const arr = await db.collection('species')
-                .orderBy('name')
-                .get();
+        const arr = await db
+            .collection('species')
+            .orderBy('name')
+            .get();
+       
+        this.species = arr.docs.map((d) => ({ ...d.data() }));        
+    }
 
-            this.species = arr.docs.map((d) => ({ ...d.data() }));
-           
-        },
-        findSpecies(id){
-            return this.species.find((s) => s.id === id);
-        }
-    });
+    findSpecies(id){
+        return {...this.species.find((s) => s.id === id)};
+    }
+    
 };

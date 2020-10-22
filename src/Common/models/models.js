@@ -27,7 +27,16 @@ function Species(id, name, abrv) {
   this.id = id;
   this.name = name;
   this.abrv = abrv;
-}
+  this.filter = [];
+};
+
+Species.prototype.setFilter = function () {
+  this.filter = [
+    this.name.toLowerCase(),
+    this.abrv.toLowerCase()];
+};
+
+
 
 export {
   Caracter,
