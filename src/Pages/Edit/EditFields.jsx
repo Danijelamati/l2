@@ -1,9 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { useRootStore } from '../../Store/RootStore';
-
-import './EditFields.css';
 
 function EditFields() {
 
@@ -17,7 +14,7 @@ function EditFields() {
           className="edit-input"
           type="text"
           onChange={(event) => editPageStore.input("name", event.target.value)}
-          defaultValue={""}
+          defaultValue=""
           name="name"
         />
       </div>
@@ -27,7 +24,7 @@ function EditFields() {
           className="edit-input"
           type="text"
           onChange={(event) => editPageStore.input("abrv", event.target.value)}
-          defaultValue={""}
+          defaultValue=""
           name="abrv"
         />
       </div>
@@ -44,10 +41,5 @@ function EditFields() {
     </div>
   );
 }
-
-EditFields.propTypes = {
-  caracter: PropTypes.shape(),
-  species: PropTypes.shape()
-};
 
 export default EditFields;

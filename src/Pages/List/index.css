@@ -9,7 +9,69 @@
     border: black solid 3px;
 
 }
+.list-elements{
+    display: flex;
+    justify-content: flex-end;
+}
+.list-element-number{
+    display: flex;
+    align-items: center;
+}
+.list-element-number-input{
+    height: 50%;
+    width: 5%;
+    -webkit-appearance: none; 
+    -moz-appearance: textfield;
+}
+.filter{
+    display: flex;
+    flex-direction: row;
 
+    align-items: center;
+
+    margin-left: 10%;
+    
+    text-align: center;
+}
+
+.filter-para{
+    font-size: large;
+    margin-right: 1%;
+}
+
+.filter-input{
+    width: 40%;
+}
+.list-navigation{
+    display: flex;
+    align-items: center;
+}
+.list-navigation-button{
+    height: 50%;
+}
+.table {
+    display: flex;
+    flex-direction: column;
+    
+    justify-content: space-between;
+    align-items: center;
+}
+.table-header{
+    display: flex;
+    flex-direction: row;
+
+    justify-content: space-around;
+    align-items: center;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    width: 80%;
+}
+.table-header-names{
+    padding-right: 50px;
+    cursor: pointer;
+}
 
 
 

@@ -4,8 +4,6 @@ import { useRootStore } from '../../Store/RootStore';
 
 import ListNavigation from './ListNavigation';
 
-import './Elements.css';
-
 function Elements() {
   const { listPageStore } = useRootStore();
 

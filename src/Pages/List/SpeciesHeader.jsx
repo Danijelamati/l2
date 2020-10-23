@@ -25,12 +25,12 @@ function SpeciesHeader() {
           Species Abrv
         </h3>  
         <h3
-            className="table-header-names"
+          className="table-header-names"
         >
-            Edit
+          Edit
         </h3>
       </div>      
     );
-  }
+  };
 
 export default SpeciesHeader;

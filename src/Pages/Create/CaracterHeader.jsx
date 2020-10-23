@@ -24,8 +24,7 @@ function CaracterHeader() {
           className="table-header-names"
         >
           Species Abrv
-        </h3>        
-        <h3 className="table-header-names">Edit</h3>
+        </h3>
       </div>
     );
   }

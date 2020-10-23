@@ -4,8 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { nanoid } from 'nanoid';
 
 import { useRootStore } from '../../Store/RootStore';
-import saveCaracter from '../../Common/util/saveCaracter';
-import firebase from '../../Common/util/firebase';
+import { saveWholeCaracter, findCaracterName} from '../../Common/util/saveCaracter';
 import { FullCaracter } from '../../Common/models/models';
 
 import ListItem from '../../Components/ListItem';
@@ -13,23 +12,20 @@ import CaracterHeader from './CaracterHeader';
 
 const CaracterData = observer( () => {
 
-    const { addPageStore, speciesStore, newCaracterStore } = useRootStore();
+    const { addPageStore, speciesStore, newCaracterStore, listPageStore } = useRootStore();
 
     const [redirect, setRedirect] = useState(false);
 
-    const handleSave = async (newCarStore, addPgStore, setRed) => {
+    const handleSave = async (newCarStore, addPgStore, setRed, listPgStore) => {
 
         if(!newCarStore.name || !newCarStore.abrv || newCarStore.selectedSpecies.length === 0){
             addPgStore.setError("Fileds cannot be empty");
             return;
         }
 
-        const db = firebase.firestore();
-
-        let findCaracter = await db.collection("caracters").where("name", "==", newCarStore.name).get();
-        findCaracter = findCaracter.docs.map((d) => ({ ...d.data() }));
+        const check = await findCaracterName(newCarStore.name);
         
-        if(findCaracter.length !== 0){
+        if(check){
             addPgStore.setError("Caracter with that name exists");
             return;
         }         
@@ -44,51 +40,52 @@ const CaracterData = observer( () => {
 
         fullCaracter.setFilter();
 
-        await saveCaracter(fullCaracter);
+        await saveWholeCaracter(fullCaracter);
+        listPgStore.resetOptions();
         setRed(true);
     };
 
     return (
-        <div>                          
-            <div>
-                <p>Select species</p>
-                <select onChange={(event) => addPageStore.selectCaracterSpecies(event.target.value)}>
-                    {speciesStore.species.map((e) => <option key={e.id} value={e.id}>{e.name}</option>)}
-                </select>
-            </div>
-            <div className="caracter-table">
-                <CaracterHeader />
-                <ListItem 
-                    item={{
+      <div>                          
+        <div>
+          <p>Select species</p>
+          <select onChange={(event) => addPageStore.selectCaracterSpecies(event.target.value)}>
+            {speciesStore.species.map((e) => <option key={e.id} value={e.id}>{e.name}</option>)}
+          </select>
+        </div>
+        <div className="caracter-table">
+          <CaracterHeader />
+          <ListItem 
+            item={{
                         name: newCaracterStore.name,
                         abrv: newCaracterStore.abrv,
                         makeName: newCaracterStore.selectedSpecies.name,
                         makeAbrv: newCaracterStore.selectedSpecies.abrv,
                     }}
-                />
-            </div>            
-            <div>
-                {
-                    addPageStore.error && addPageStore.error
-                }
-            </div>
-            <button
-                onClick={() => handleSave(newCaracterStore, addPageStore, setRedirect)}
-                type="button"
-            >
-                Save
-            </button>  
-            <button                
-                type="button"
-                name="cancel"
-                onClick={() => setRedirect(true)}
-            >
-                Cancel
-            </button>  
-            {
+          />
+        </div>            
+        <div>
+          {
+                addPageStore.error && addPageStore.error
+              }
+        </div>
+        <button
+          onClick={() => handleSave(newCaracterStore, addPageStore, setRedirect, listPageStore)}
+          type="button"
+        >
+          Save
+        </button>  
+        <button                
+          type="button"
+          name="cancel"
+          onClick={() => setRedirect(true)}
+        >
+          Cancel
+        </button>  
+        {
                 redirect && <Redirect to="/list" />
             }        
-        </div>
+      </div>
     );
 });
 

@@ -5,8 +5,6 @@ import { useRootStore } from '../../Store/RootStore';
 import ListItem from '../../Components/ListItem';
 import SpeciesItem from '../../Components/SpeciesItem';
 
-import './TableContent.css';
-
 const TableContent = observer(() => {
   const { listStore, listPageStore, speciesListStore } = useRootStore();
 

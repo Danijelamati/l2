@@ -15,7 +15,7 @@ export default class EditPageStore {
     }
     
     async initialise(value, entity){
-        console.log("initialise",value, entity)
+        
         if(value === "species"){
             await this.RootStore.editSpeciesStore.initialise(entity);
         }

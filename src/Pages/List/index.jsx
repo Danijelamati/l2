@@ -1,20 +1,18 @@
 import React, { useEffect} from 'react';
-import { Observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 
 import { useRootStore } from '../../Store/RootStore';
 
 import Filter from './Filter';
-import TableContent from './TableContent';
-import TableHeader from './TableHeader';
 import Elements from './Elements';
 import Modes from './Modes';
-import SpeciesHeader from './SpeciesHeader';
+import Table from './Table';
 
 import './index.css';
 
-function List() {
+const List = observer(() => {
   const { listPageStore, listStore } = useRootStore();
-
+  
   useEffect(
     () => {
       if(listPageStore.loaded){
@@ -32,24 +30,22 @@ function List() {
     }, [listPageStore, listStore],
   );
 
-  return (
-    <Observer>
-      { () => (
+  return (   
+    <> 
+      { 
                 !listPageStore.loaded
                   ? <p>loading.....</p>
                   : (
                     <div className="list">
                       <Filter />
-                      <Modes />
-                      {listPageStore.mode === "caracter" && <TableHeader />}
-                      {listPageStore.mode === "species" && <SpeciesHeader />}
-                      <TableContent />
+                      <Modes />    
+                      <Table />                  
                       <Elements />
                     </div>
                   )
-       ) }
-    </Observer>
+      }  
+    </>  
   );
-}
+})
 
 export default List;

@@ -3,8 +3,6 @@ import { observer } from 'mobx-react';
 
 import { useRootStore } from '../../Store/RootStore';
 
-import './ListNavigation.css';
-
 const ListNavigation = observer(() => {
   const { listPageStore } = useRootStore();
 

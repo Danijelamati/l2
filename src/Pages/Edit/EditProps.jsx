@@ -1,7 +1,5 @@
 import React from 'react';
 
-import './EditProps.css';
-
 function EditProps() {
   return (
     <div className="edit-props">

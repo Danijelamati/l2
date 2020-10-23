@@ -7,9 +7,10 @@ import { useRootStore } from '../../Store/RootStore';
 
 import CaracterEdit from './CaracterEdit';
 import SpeciesEdit from './SpeciesEdit';
+import EditFields from './EditFields';
 
 import './index.css';
-import EditFields from './EditFields';
+
 
 function Edit({ location }) {
   const { caracter, species } = location;

@@ -9,32 +9,34 @@ const Modes = observer(() => {
     const { listPageStore } = useRootStore(); 
 
     return (
-        <div>
-            <Link
-                    to={{
+      <div>
+        <Link
+          to={{
                         pathname: '/create',
                         entity: listPageStore.mode
                     }}
-                    >
-                    <button type="button">
-                        Create
-                    </button>                    
-                </Link>   
-            <div>
-                <button 
-                    value="species" 
-                    onClick={(event) => listPageStore.menageMode(event.target.value)}
-                >
-                    Species
-                </button>
-                <button 
-                    value="caracter" 
-                    onClick={(event) => listPageStore.menageMode(event.target.value)}
-                    >
-                    Caracters
-                </button>                   
-            </div> 
-        </div>
+        >
+          <button type="button">
+            Create
+          </button>                    
+        </Link>   
+        <div>
+          <button 
+            value="species" 
+            onClick={(event) => listPageStore.menageMode(event.target.value)}
+            type="button"
+          >
+            Species
+          </button>
+          <button 
+            value="caracter" 
+            onClick={(event) => listPageStore.menageMode(event.target.value)}
+            type="button"
+          >
+            Caracters
+          </button>                   
+        </div> 
+      </div>
     );
 });
 

@@ -40,18 +40,24 @@ function ListItem({ item, editLink }) {
 
 ListItem.propTypes = {
   item: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    makeId: PropTypes.string.isRequired,
-    makeName: PropTypes.string.isRequired,
-    makeAbrv: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    abrv: PropTypes.string.isRequired,
+    id: PropTypes.string,
+    makeId: PropTypes.string,
+    makeName: PropTypes.string,
+    makeAbrv: PropTypes.string,
+    name: PropTypes.string,
+    abrv: PropTypes.string,
   }).isRequired,
   editLink: PropTypes.string,
 };
 
 ListItem.defaultProps = {
-  editLink: '',
+  editLink: "",
+  id: "",
+  makeId: "",
+  makeName: "",
+  makeAbrv: "",
+  name: "",
+  abrv: ""
 };
 
 export default ListItem;

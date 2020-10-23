@@ -3,32 +3,30 @@ import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { nanoid } from 'nanoid';
 
-import firebase from '../../Common/util/firebase';
 import { useRootStore } from '../../Store/RootStore';
 import { Species } from '../../Common/models/models';
+import { findSpeciesName, saveSpecies } from '../../Common/util/saveSpecies';
 
 import SpeciesItem from '../../Components/SpeciesItem';
-import SpeciesHeader from './SpeciesHeader';
+import SpeciesHeader from '../../Components/SpeciesHeader';
+
 
 const SpeciesData = observer( () => {
 
-    const { addPageStore, newSpeciesStore } = useRootStore();
+    const { addPageStore, newSpeciesStore, listPageStore } = useRootStore();
 
     const [redirect, setRedirect] = useState(false);
 
-    const saveSpecies = async (addStore, newSpeStore, setRed) => {
+    const handleSave = async (addStore, newSpeStore, setRed, listPgStore) => {
        
         if(!newSpeStore.name || !newSpeStore.abrv){            
             addStore.setError("Input fields cannot be empty");
             return;
         }
         
-        const db = firebase.firestore();
-
-        let a = await db.collection("species").where("name", "==", newSpeStore.name).get();
-        a = a.docs.map((d) => ({ ...d.data() }));
+        const found = await findSpeciesName(newSpeStore.name);
     
-        if(a.length !== 0){
+        if(found){
             addStore.setError("Species with that name exists") ;
             return;
         }              
@@ -36,39 +34,41 @@ const SpeciesData = observer( () => {
         const newSpecies = new Species(nanoid(), newSpeStore.name, newSpeStore.abrv);        
         newSpecies.setFilter();
         
-        await db.collection("species").doc().set({ ...newSpecies });
+        saveSpecies(newSpecies); 
+
+        listPgStore.resetOptions();
                 
         setRed(true);
         
     };
 
     return (
+      <div>
+        <SpeciesHeader />
+        <SpeciesItem species={{name: newSpeciesStore.name, abrv: newSpeciesStore.abrv}} />
         <div>
-            <SpeciesHeader />
-            <SpeciesItem species={{name: newSpeciesStore.name, abrv: newSpeciesStore.abrv}}/>
-            <div>
-                {
-                    addPageStore.error && addPageStore.error
-                }
-            </div>            
-            <button                
-                type="button"
-                name="save"
-                onClick={() => saveSpecies(addPageStore, newSpeciesStore, setRedirect)}
-            >
-                Save
-            </button>
-            <button                
-                type="button"
-                name="cancel"
-                onClick={() => setRedirect(true)}
-            >
-                Cancel
-            </button>
-            {
+          {
+            addPageStore.error && addPageStore.error
+          }
+        </div>            
+        <button                
+          type="button"
+          name="save"
+          onClick={() => handleSave(addPageStore, newSpeciesStore, setRedirect, listPageStore)}
+        >
+          Save
+        </button>
+        <button                
+          type="button"
+          name="cancel"
+          onClick={() => setRedirect(true)}
+        >
+          Cancel
+        </button>
+        {
                 redirect && <Redirect to="/list" />
-            }
-        </div>
+        }
+      </div>
     );
 });
 

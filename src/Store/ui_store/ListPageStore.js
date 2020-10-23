@@ -40,9 +40,18 @@ export default class ListPageStore{
     }    
 
     @action
-    resetOptions() {
-        this.listOptions = { ...initialState };
-        this.RootStore.listStore.firstPage();
+    async resetOptions() {
+        if(this.mode === "caracter"){
+            this.listOptions = { ...initialState };
+            await this.RootStore.listStore.firstPage();
+            return;
+        }
+        if(this.mode === "species"){
+            this.listOptions = { ...initialState };
+            await this.RootStore.speciesListStore.firstPage();
+            return;
+        }
+        
     }
 
     @action

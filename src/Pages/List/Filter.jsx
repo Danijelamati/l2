@@ -1,8 +1,6 @@
 import React from 'react';
 import { useRootStore } from '../../Store/RootStore';
 
-import './Filter.css';
-
 const Filter = () => {
   const { listPageStore } = useRootStore();
 

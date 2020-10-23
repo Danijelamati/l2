@@ -10,7 +10,7 @@ export default class EditCaracterStore{
     
     @action
     initialise(obj){
-            this.editCaracter = {...obj};
+        this.editCaracter = {...obj};
     }
 
     @action

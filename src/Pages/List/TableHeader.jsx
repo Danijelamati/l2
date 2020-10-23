@@ -2,8 +2,6 @@ import React from 'react';
 
 import { useRootStore } from '../../Store/RootStore';
 
-import './TableHeader.css';
-
 function TableHeader() {
   const { listPageStore } = useRootStore();
 
