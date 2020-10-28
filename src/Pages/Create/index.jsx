@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
@@ -7,37 +7,43 @@ import { useRootStore } from '../../Store/RootStore';
 import Input from './Input';
 import SpeciesData from './SpeciesData';
 import CaracterData from './CaracterData';
+import Data from './Data';
 
 import './index.css';
+import { observer } from 'mobx-react';
 
-
-function Create({location}) {
+const Create = observer(({location}) => {
 
     const { entity } = location;
     
     const { addPageStore } = useRootStore();
-    
-    const [ redirect, setRedirect] = useState(false);
-    const [ loaded, setLoaded] = useState(false);
 
     useEffect(() => {
-        if(!entity || (entity !== "caracter" && entity !== "species")){           
-            setRedirect(true);
-            return;
+     
+        if(!entity || (entity !== "caracter" && entity !== "species")){
+          addPageStore.setRedirect(true);
+          return;
         }
         
-        (async () => {
-            await addPageStore.initialise(entity);
-            setLoaded(true);
+        (async () => {         
+          await addPageStore.initialise(entity);
         })();
-
+        
     },[entity,addPageStore]);
+
+    useEffect(()=>{
+      return () => {
+        if(addPageStore.redirect){            
+          addPageStore.exit();
+        }          
+      }
+    },[addPageStore]);
 
     return (
       <>        
-        {redirect && <Redirect to="/list" />}                
+        {addPageStore.redirect && <Redirect to="/list" />}                
         <div>
-          {!loaded ? 
+          {!addPageStore.loaded ? 
             <p>loading...</p>
           : (
             <>
@@ -45,20 +51,22 @@ function Create({location}) {
                 new
                 {addPageStore.mode}
               </h1>
-              <Input />
-              {addPageStore.mode === "species" && <SpeciesData />}
-              {addPageStore.mode === "caracter" && <CaracterData />}
+              <Input species={addPageStore.mode === "caracter"} />
+              <Data 
+                save={(createPgStore) => createPgStore.mode === "species" ? createPgStore.handleSaveSpecies() : createPgStore.handleSaveCaracter()}
+                table={(createPgStore) => createPgStore.mode === "species" ? <SpeciesData /> : <CaracterData />}
+                />
             </>
           )}   
         </div>                      
       </>
     );
-}
+});
 
 Create.propTypes = {
     location: PropTypes.shape({
-      entity: PropTypes.string
-    }).isRequired,    
+      entity: PropTypes.string.isRequired
+    }),    
   }; 
 
 Create.defaultProps = {

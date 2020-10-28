@@ -1,10 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { useRootStore } from '../../Store/RootStore';
 
-function Input() {
+function Input(props) {
 
-    const { addPageStore } = useRootStore();
+    const { species } = props;
+
+    const { addPageStore, speciesStore } = useRootStore();
 
     return (
       <div className="input">            
@@ -26,8 +29,22 @@ function Input() {
             name="abrv"
           />
         </div>
+        {
+          species && (
+            <div>
+              <p>Select species</p>
+              <select onChange={(event) => addPageStore.selectCaracterSpecies(event.target.value)}>
+                {speciesStore.species.map((e) => <option key={e.id} value={e.id}>{e.name}</option>)}
+              </select>
+            </div>
+          )
+        }        
       </div>
     );
-}
+};
+
+Input.propTypes = {
+  species: PropTypes.bool
+};
 
 export default Input;

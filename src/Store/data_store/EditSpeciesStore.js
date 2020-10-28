@@ -13,6 +13,15 @@ export default class EditSpeciesStore{
     }
 
     @action
+    setValue(name,value){
+        this[name] = value;
+    }
+
+    @action
+    setProperty(name, value){
+        this.editedSpecies[name] = value;
+    }
+        
     async initialise(species){
 
         let db = firebase.firestore();
@@ -21,18 +30,9 @@ export default class EditSpeciesStore{
                     .where("makeId", "==", species.id)
                     .get();
       
-        this.editedSpecies = species; 
-        this.caracters = db.docs.map((d) => ({ ...d.data() }));
+        this.setValue("editedSpecies", species);
+        this.setValue("caracters", db.docs.map((d) => ({ ...d.data() })));       
 
     }
-
-    @action
-    setProperty(name, value){
-        this.editedSpecies[name] = value;
-    }
-        
-    
-
-    
     
 };

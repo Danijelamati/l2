@@ -1,23 +1,26 @@
+import { observer } from 'mobx-react';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { useRootStore } from '../../Store/RootStore';
 
-import TableContent from './TableContent';
-import TableHeader from './TableHeader';
-import SpeciesHeader from './SpeciesHeader';
-import { observer } from 'mobx-react';
+const Table = observer((props) => {
 
-const Table = observer(() => {
+    const { content, header } = props;
 
     const { listPageStore } = useRootStore();
-    
+   
     return (
-        <>
-            {listPageStore.mode === "caracter" && <TableHeader />}
-            {listPageStore.mode === "species" && <SpeciesHeader />}
-            <TableContent /> 
-        </>
+        <div className="table">
+            {header(listPageStore)}
+            {content(listPageStore)}
+        </div>
     );
 });
+
+Table.propTypes = {
+    content: PropTypes.func,
+    header: PropTypes.func
+};
 
 export default Table;

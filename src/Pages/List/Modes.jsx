@@ -13,7 +13,7 @@ const Modes = observer(() => {
         <Link
           to={{
                         pathname: '/create',
-                        entity: listPageStore.mode
+                        entity: listPageStore.mode === "list" ? "caracter" : "species"
                     }}
         >
           <button type="button">
@@ -23,14 +23,14 @@ const Modes = observer(() => {
         <div>
           <button 
             value="species" 
-            onClick={(event) => listPageStore.menageMode(event.target.value)}
+            onClick={(event) => listPageStore.manageMode(event.target.value)}
             type="button"
           >
             Species
           </button>
           <button 
-            value="caracter" 
-            onClick={(event) => listPageStore.menageMode(event.target.value)}
+            value="list" 
+            onClick={(event) => listPageStore.manageMode(event.target.value)}
             type="button"
           >
             Caracters

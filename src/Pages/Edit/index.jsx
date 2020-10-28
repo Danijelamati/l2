@@ -1,69 +1,75 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
-import { Observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
 
 import { useRootStore } from '../../Store/RootStore';
 
 import CaracterEdit from './CaracterEdit';
 import SpeciesEdit from './SpeciesEdit';
-import EditFields from './EditFields';
+import Input from './Input';
+import EditEntity from './EditEntity';
 
 import './index.css';
 
 
-function Edit({ location }) {
-  const { caracter, species } = location;
- 
+const Edit = observer(({ location }) => {
+
+  const { caracter, species} = location;
+
   const { editPageStore } = useRootStore();
 
-  const [redirect, setRedirect] = useState(false); 
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    
+  useEffect(() => {    
     (async () => {      
-      if(!caracter && !species){
-        setRedirect(true);
+      if(!caracter && !species){ 
+        editPageStore.setRedirect(true);
         return;
       }
+      
       if(caracter){
         await editPageStore.initialise("caracter" ,caracter);  
       }else{
         await editPageStore.initialise("species" ,species); 
       }
-         
-      setLoaded(true);
       
     })();
-  }, [editPageStore, caracter, species]);  
+  }, [editPageStore, caracter, species]); 
+  
+  useEffect(() => {
+    return () => {
+      if(editPageStore.redirect){
+        editPageStore.exit();
+      }      
+    };
+  }, [editPageStore]);
 
-  return (
-    <Observer>
-      { () => (
-                (!caracter && !species) || redirect ? <Redirect to="/list" />
-                  : loaded
-                && (
-                  <div className="edit">
-                    <EditFields />
-                    {editPageStore.mode === "caracter" && <CaracterEdit caracter={caracter} setRedirect={setRedirect} />}
-                    {editPageStore.mode === "species" && <SpeciesEdit species={species} setRedirect={setRedirect} />}                    
-                  </div>
-                )
-      )}
-    </Observer>  
+  return (    
+    <>
+    {
+      editPageStore.redirect && <Redirect to="/list" />
+    }
+    {
+      editPageStore.loaded && (
+        <div className="edit">
+          <Input species={editPageStore.mode === "caracters"} />
+          <EditEntity 
+            render={ (editStore) => editStore.mode ==="species" ? <SpeciesEdit /> : <CaracterEdit />}
+            save={( editStore, ent) => editStore.mode === "species" ? editStore.handleSaveSpecies(ent) : editStore.handleSaveCaracter(ent) }
+            entity={!caracter ? species : caracter}
+          />            
+        </div> 
+      )      
+    }
+    </>
+       
   );
-}
+});
 
 Edit.propTypes = {
   location: PropTypes.shape({
     caracter: PropTypes.shape(),
     species: PropTypes.shape()
   }),
-};
-
-Edit.defaultProps = {
-  location: ''
 };
 
 export default Edit;

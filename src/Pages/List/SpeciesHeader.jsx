@@ -4,23 +4,19 @@ import { useRootStore } from '../../Store/RootStore';
 
 function SpeciesHeader() {   
 
-    const { listPageStore } = useRootStore();
-    
-    const handleClick = (value, listPgStore) => {
-        listPgStore.setOrderBy(value);
-    };
+    const { listPageStore } = useRootStore();    
   
     return (
       <div className="table-header">
         <h3
           className="table-header-names"
-          onClick={() => handleClick('name', listPageStore)}
+          onClick={() => listPageStore.setOrderBy("name")}
         >
           Species
         </h3>
         <h3
           className="table-header-names"
-          onClick={() => handleClick('abrv', listPageStore)}
+          onClick={() => listPageStore.setOrderBy("abrv")}
         >
           Species Abrv
         </h3>  

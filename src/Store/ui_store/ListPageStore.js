@@ -1,7 +1,7 @@
 import { makeObservable, action, observable } from "mobx";
 
 const initialState = {
-    orderBy: 'name',
+    orderBy: 'id',
     reverse: false,
     elementsPerPage: 10,
     page: 1,
@@ -20,12 +20,12 @@ export default class ListPageStore{
         this.RootStore = RootStore;
         this.listOptions = {...initialState};
         this.loaded = false;
-        this.mode = "caracter";
+        this.mode = "list";
     }
     
     @action
     async initialise(){
-        await this.RootStore.listStore.firstPage();
+        await this.RootStore.tableStore.firstPage();
         this.setLoaded(true);
     }
 
@@ -41,16 +41,9 @@ export default class ListPageStore{
 
     @action
     async resetOptions() {
-        if(this.mode === "caracter"){
-            this.listOptions = { ...initialState };
-            await this.RootStore.listStore.firstPage();
-            return;
-        }
-        if(this.mode === "species"){
-            this.listOptions = { ...initialState };
-            await this.RootStore.speciesListStore.firstPage();
-            return;
-        }
+        
+        this.listOptions = { ...initialState };
+        await this.RootStore.tableStore.firstPage();        
         
     }
 
@@ -58,15 +51,9 @@ export default class ListPageStore{
     setFilter(value) {
         this.listOptions.filter = value;
         this.listOptions.page = 1;
-        if(this.mode==="caracter"){
-            this.RootStore.listStore.firstPage();
-            return;
-        }
-        if(this.mode === "species"){
-            this.RootStore.speciesListStore.firstPage();
-            return; 
-        }        
-    }
+       
+        this.RootStore.tableStore.firstPage();
+    }    
 
     @action
     setElements(value) {
@@ -75,14 +62,9 @@ export default class ListPageStore{
         }
         this.listOptions.elementsPerPage = value;
         this.setPage(1);
-        if(this.mode==="caracter"){
-            this.RootStore.listStore.firstPage();
-            return;
-        }
-        if(this.mode==="species"){
-            this.RootStore.speciesListStore.firstPage();
-            return;
-        }        
+        
+        this.RootStore.tableStore.firstPage();
+        
     }
 
     @action
@@ -99,15 +81,9 @@ export default class ListPageStore{
         }
 
         this.setPage(1);
-
-        if(this.mode==="caracter"){
-            this.RootStore.listStore.firstPage();
-            return;
-        }
-        if(this.mode==="species"){
-            this.RootStore.speciesListStore.firstPage();
-            return;
-        } 
+        
+        this.RootStore.tableStore.firstPage();            
+        
     }
 
     @action
@@ -120,68 +96,41 @@ export default class ListPageStore{
         this.mode = value;
     }
 
-    async menageMode(value){
+    async manageMode(value){
 
+        if(this.mode === value){
+            return;
+        }
+        this.RootStore.tableStore.setList([]);
         this.setMode(value);
         this.setOptions("filter", "");
         this.setOptions("page", 1);
         this.setOptions("reverse", false);
-        this.setOptions("orderBy", "name");
-
-        if(value==="caracter"){
-            this.RootStore.speciesListStore.setSpecies([]);
-            await this.RootStore.listStore.firstPage();            
-        }
-        if(value==="species"){
-            this.RootStore.listStore.setList([]);
-            await this.RootStore.speciesListStore.firstPage();            
-        }       
-        
-        
+        this.setOptions("orderBy", "id");
+     
+        await this.RootStore.tableStore.firstPage();            
+       
     }
     
-    async navigatePage(action,value) {   
-        
-        if(this.mode==="caracter"){
-            if(action === "nextPage"){
-                const success = await this.RootStore.listStore.nextPage(value);
-                if(success){
-                    this.setPage(value);                    
-                    return;
-                }
+    async navigatePage(action,value) {           
+      
+        if(action === "nextPage"){
+            const success = await this.RootStore.tableStore.nextPage(value);
+            if(success){
+                this.setPage(value);                    
                 return;
             }
-    
-            if(action==="prevPage"){
-                const success = await this.RootStore.listStore.prevPage(value);
-                if(success){
-                    this.setPage(value);
-                }        
-                return;        
-            }
+            return;
         }
-
-        if(this.mode==="species"){
-            if(action === "nextPage"){
-                const success = await this.RootStore.speciesListStore.nextPage(value);
-                if(success){
-                    this.setPage(value);                    
-                    return;
-                }
-                return;
-            }
     
-            if(action==="prevPage"){
-                const success = await this.RootStore.speciesListStore.prevPage(value);
-                if(success){
-                    this.setPage(value);
-                }        
-                return;        
-            }
+        if(action==="prevPage"){
+            const success = await this.RootStore.tableStore.prevPage(value);
+            if(success){
+                this.setPage(value);
+            }        
+            return;        
         }
-
-        
-            
+     
             
     }   
 };

@@ -1,29 +1,29 @@
-import { makeObservable, observable, action } from "mobx";
+import { makeObservable, observable, action } from 'mobx';
 
 import firebase from '../../Common/util/firebase';
 
-export default class SpeciesListStore{
-
-    @observable speciesList;
+export default class TableStore {
+    
+    @observable list;
 
     constructor(RootStore){
         makeObservable(this);
         this.RootStore = RootStore;
-        this.speciesList = [];
+        this.list = [];
     }
 
     @action
-    setSpecies(value){
-        this.speciesList = value;
+    setList(value){
+        this.list = value;
     }
 
     async firstPage(){
         
-        const { listOptions } = this.RootStore.listPageStore;
+        const { listOptions, mode } = this.RootStore.listPageStore;
 
         const db = firebase.firestore();
         let list = db
-            .collection('species')
+            .collection(mode)
             .orderBy(listOptions.orderBy);    
             
         if (listOptions.filter) {
@@ -35,18 +35,18 @@ export default class SpeciesListStore{
                 .limitToLast(listOptions.elementsPerPage)
                 .get();
                 
-            this.setSpecies(list.docs.map((d) => ({ ...d.data() })).reverse());
+            this.setList(list.docs.map((d) => ({ ...d.data() })).reverse());
         } else {
             list = await list                
                 .limit(listOptions.elementsPerPage)
                 .get();
           
-            this.setSpecies(list.docs.map((d) => ({ ...d.data() })));
-        }   
+            this.setList(list.docs.map((d) => ({ ...d.data() })));
+        }           
     }
 
     async nextPage(value) {
-        const { listOptions } = this.RootStore.listPageStore;
+        const { listOptions, mode } = this.RootStore.listPageStore;
     
         if(value < 1){
           return false;
@@ -57,13 +57,13 @@ export default class SpeciesListStore{
           return true;
         }
               
-        if (this.speciesList.length < listOptions.elementsPerPage) {              
+        if (this.list.length < listOptions.elementsPerPage) {              
           return false;
         }   
     
         const db = firebase.firestore();
           
-        let list = db.collection('species');
+        let list = db.collection(mode);
     
         let nextList;
         
@@ -77,7 +77,7 @@ export default class SpeciesListStore{
         if(listOptions.reverse){
                    
           list = await list
-            .endBefore(this.speciesList[this.speciesList.length - 1][listOptions.orderBy])
+            .endBefore(this.list[this.list.length - 1][listOptions.orderBy])
             .limitToLast(listOptions.elementsPerPage)
             .get();
                 
@@ -85,7 +85,7 @@ export default class SpeciesListStore{
         }else{
                     
           list = await list
-            .startAfter(this.speciesList[this.speciesList.length - 1][listOptions.orderBy])
+            .startAfter(this.list[this.list.length - 1][listOptions.orderBy])
             .limit(listOptions.elementsPerPage)
             .get();
     
@@ -96,13 +96,13 @@ export default class SpeciesListStore{
           return false;
         }
     
-        this.setSpecies(nextList);
+        this.setList(nextList);
         return true;             
               
         }
     
       async prevPage(value) {
-          const { listOptions } = this.RootStore.listPageStore;
+          const { listOptions, mode } = this.RootStore.listPageStore;
           
         if (value < 1) {
           return false;
@@ -114,7 +114,7 @@ export default class SpeciesListStore{
         }
               
         const db = firebase.firestore();
-        let list = db.collection('species');
+        let list = db.collection(mode);
         
         if (listOptions.filter) {
           list = list.where('filter', 'array-contains', listOptions.filter.toLocaleLowerCase());
@@ -124,22 +124,20 @@ export default class SpeciesListStore{
           .orderBy(listOptions.orderBy)
     
         if(listOptions.reverse){
-          list = await list.startAfter(this.speciesList[0][listOptions.orderBy])
+          list = await list.startAfter(this.list[0][listOptions.orderBy])
             .limit(listOptions.elementsPerPage)
             .get();
                  
-          this.setSpecies([...list.docs.map((d) => ({ ...d.data() }))].reverse());
+          this.setList([...list.docs.map((d) => ({ ...d.data() }))].reverse());
         }else{
           list = await list                    
-            .endBefore(this.speciesList[0][listOptions.orderBy])
+            .endBefore(this.list[0][listOptions.orderBy])
             .limitToLast(listOptions.elementsPerPage)
             .get();      
                    
-          this.setSpecies([...list.docs.map((d) => ({ ...d.data() }))]);
+          this.setList([...list.docs.map((d) => ({ ...d.data() }))]);
         } 
     
         return true;
       }
-
-
 }

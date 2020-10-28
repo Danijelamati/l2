@@ -24,6 +24,11 @@ export default class SpeciesStore {
         this.species = arr.docs.map((d) => ({ ...d.data() }));        
     }
 
+    @action
+    clean(){
+        this.species = [];
+    }
+
     findSpecies(id){
         return {...this.species.find((s) => s.id === id)};
     }

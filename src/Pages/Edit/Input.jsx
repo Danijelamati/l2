@@ -1,8 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { useRootStore } from '../../Store/RootStore';
 
-function EditFields() {
+function Input(props) {
+
+  const { species } = props;
 
   const { editPageStore, speciesStore } = useRootStore();
 
@@ -29,7 +32,7 @@ function EditFields() {
         />
       </div>
       {
-        editPageStore.mode === "caracter" && (
+        species && (
           <div>
             <p>Select species</p>
             <select onChange={(event) => editPageStore.selectSpecies(event.target.value)}>
@@ -42,4 +45,8 @@ function EditFields() {
   );
 }
 
-export default EditFields;
+Input.propTypes = {
+  species: PropTypes.bool
+};
+
+export default Input;
