@@ -3,9 +3,7 @@ import { observer } from 'mobx-react';
 
 import { useRootStore } from '../../Store/RootStore';
 
-import ListItem from '../../Components/ListItem';
-import CaracterHeader from '../../Components/CaracterHeader';
-
+import { ListItem, CaracterHeader } from '../../Components';
  
 const  CaracterEdit = observer(() => {
     

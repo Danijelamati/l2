@@ -26,6 +26,7 @@ export default class ListPageStore{
     @action
     async initialise(){
         await this.RootStore.tableStore.firstPage();
+        await this.setSpecies();    
         this.setLoaded(true);
     }
 
@@ -96,6 +97,48 @@ export default class ListPageStore{
         this.mode = value;
     }
 
+    @action
+    selectSpecies(id){
+        
+        if(!id){
+            return;
+        }
+       
+        if(typeof this.listOptions.filter === "string"){     
+            
+            this.listOptions.filter = [this.RootStore.speciesStore.findById(id)];
+            this.listOptions.page = 1;
+            this.RootStore.tableStore.firstPage(); 
+            return;
+        }
+        
+        const index = this.listOptions.filter.findIndex(e => e.id === id);
+
+        if(index !== -1){  
+
+            this.listOptions.filter.splice(index,1);
+            if(this.listOptions.filter.length === 0){
+                this.listOptions.filter = ""; 
+            }
+            this.listOptions.page = 1;
+            this.RootStore.tableStore.firstPage(); 
+            return;
+        }
+       
+        if(this.listOptions.filter.length === 10){            
+            this.listOptions.filter = [...this.listOptions.filter.slice(1), this.RootStore.speciesStore.findById(id)];
+        }else{
+            this.listOptions.filter = [...this.listOptions.filter,this.RootStore.speciesStore.findById(id)];
+        }        
+           
+        this.listOptions.page = 1;
+        this.RootStore.tableStore.firstPage(); 
+    }
+
+    async setSpecies(){       
+        await this.RootStore.speciesStore.setSpecies();        
+    }
+
     async manageMode(value){
 
         if(this.mode === value){
@@ -129,8 +172,9 @@ export default class ListPageStore{
                 this.setPage(value);
             }        
             return;        
-        }
-     
+        }    
             
     }   
+
+    
 };

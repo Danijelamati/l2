@@ -2,7 +2,8 @@ import { observer } from 'mobx-react';
 import React from 'react';
 
 import { useRootStore } from '../../Store/RootStore';
-import SpeciesItem from '../../Components/SpeciesItem';
+
+import { SpeciesItem } from '../../Components';
 
 const TableContent = observer(() => {
   

@@ -27,7 +27,13 @@ export default class TableStore {
             .orderBy(listOptions.orderBy);    
             
         if (listOptions.filter) {
-          list = list.where('filter', 'array-contains', listOptions.filter.toLocaleLowerCase());
+          if(typeof listOptions.filter === "string"){
+            list = list.where('filter', 'array-contains', listOptions.filter.toLocaleLowerCase());
+          }
+          else{
+            list = list.where('makeName', 'in', listOptions.filter.map(e => e.name)); 
+          }
+          
         }
 
         if (listOptions.reverse) {
@@ -68,7 +74,13 @@ export default class TableStore {
         let nextList;
         
         if (listOptions.filter) {
-          list = list.where('filter', 'array-contains', listOptions.filter.toLocaleLowerCase());
+          if(typeof listOptions.filter === "string"){
+            list = list.where('filter', 'array-contains', listOptions.filter.toLocaleLowerCase());
+          }
+          else{
+            list = list.where('makeName', 'in', listOptions.filter.map(e => e.name)); 
+          }
+          
         }
 
         list = list
@@ -117,7 +129,13 @@ export default class TableStore {
         let list = db.collection(mode);
         
         if (listOptions.filter) {
-          list = list.where('filter', 'array-contains', listOptions.filter.toLocaleLowerCase());
+          if(typeof listOptions.filter === "string"){
+            list = list.where('filter', 'array-contains', listOptions.filter.toLocaleLowerCase());
+          }
+          else{
+            list = list.where('makeName', 'in', listOptions.filter.map(e => e.name)); 
+          }
+          
         }
 
         list = list

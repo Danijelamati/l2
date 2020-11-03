@@ -4,11 +4,11 @@ import firebase from '../../Common/util/firebase';
 
 export default class SpeciesStore {
     
-    @observable species
+    @observable dropdown;
 
     constructor(){
         makeObservable(this);
-        this.species = [];
+        this.dropdown = [];
     }
 
     @action
@@ -21,16 +21,16 @@ export default class SpeciesStore {
             .orderBy('name')
             .get();
        
-        this.species = arr.docs.map((d) => ({ ...d.data() }));        
+        this.dropdown = arr.docs.map((d) => ({ ...d.data() }));        
     }
 
     @action
     clean(){
-        this.species = [];
+        this.dropdown = [];
     }
 
-    findSpecies(id){
-        return {...this.species.find((s) => s.id === id)};
+    findById(id){
+        return {...this.dropdown.find((s) => s.id === id)};
     }
     
 };

@@ -5,10 +5,12 @@ import {
 
 import { RootStore, RootContext } from './Store/RootStore';
 
+import { Edit, List, Create } from './Pages';
+/*
 import Edit from './Pages/Edit';
 import List from './Pages/List';
 import Create from './Pages/Create';
-
+*/
 import './App.css';
 
 

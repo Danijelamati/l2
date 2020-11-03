@@ -3,8 +3,7 @@ import React from 'react';
 
 import { useRootStore } from '../../Store/RootStore';
 
-import SpeciesItem from '../../Components/SpeciesItem';
-import SpeciesHeader from '../../Components/SpeciesHeader';
+import { SpeciesItem, SpeciesHeader } from '../../Components';
 
 
 const SpeciesData = observer( () => {

@@ -68,14 +68,17 @@ export default class AddPageStore {
     }
 
     selectCaracterSpecies(id){
-        this.RootStore.newCaracterStore.setSpecies(this.RootStore.speciesStore.findSpecies(id));
+        if(!id){
+            return;
+        }
+        this.RootStore.newCaracterStore.setSpecies(this.RootStore.speciesStore.findById(id));
     }
 
     async handleSaveCaracter(){
 
         const { newCaracterStore, listPageStore } = this.RootStore;
 
-        if(!newCaracterStore.name || !newCaracterStore.abrv || newCaracterStore.selectedSpecies.length === 0){
+        if(!newCaracterStore.name || !newCaracterStore.abrv || !newCaracterStore.selectedSpecies.name){
             this.setError("Fileds cannot be empty");
             return;
         }

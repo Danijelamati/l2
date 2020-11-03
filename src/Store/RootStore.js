@@ -2,7 +2,7 @@ import { createContext, useContext } from 'react';
 
 import ListPageStore from './ui_store/ListPageStore';
 import EditPageStore from './ui_store/EditPageStore';
-import SpeciesStore from './data_store/SpeciesStore';
+import DropdownStore from './data_store/DropdownStore';
 import EditCaracterStore from './data_store/EditCaracterStore';
 import AddPageStore from './ui_store/AddPageStore';
 import NewSpeciesStore from './data_store/NewSpeciesStore';
@@ -28,7 +28,7 @@ class RootStore {
     this.newSpeciesStore = new NewSpeciesStore();
     this.newCaracterStore = new NewCaracterStore();
 
-    this.speciesStore = new SpeciesStore();
+    this.speciesStore = new DropdownStore();
 
   }
 };

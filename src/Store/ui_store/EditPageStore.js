@@ -71,11 +71,15 @@ export default class EditPageStore {
 
     selectSpecies(makeId){
             
+        if(!makeId){
+            return;
+        }
+
         if(makeId === this.RootStore.editCaracterStore.editCaracter.makeId){
             return;
         }
-        const species = this.RootStore.speciesStore.findSpecies(makeId);  
-            
+
+        const species = this.RootStore.speciesStore.findById(makeId);              
         if(!species){
             return;
         }
@@ -94,7 +98,7 @@ export default class EditPageStore {
 
         const check = await findCaracterName(editCaracterStore.editCaracter.name);
 
-        if(check){
+        if(check && propCaracter.name !== editCaracterStore.editCaracter.name){
           //name exists
           return;
         }
