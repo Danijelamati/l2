@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 
 import { useRootStore } from '../../Store/RootStore';
 
-import { SpeciesDropdown } from '../../Components';
+import { Dropdown } from '../../Components';
 
 
 function Input(props) {
 
     const { species } = props;
 
-    const { addPageStore } = useRootStore();
+    const { addPageStore, dropdownStore } = useRootStore();
 
     return (
       <div className="input">            
@@ -36,7 +36,10 @@ function Input(props) {
           species && (
             <div>
               <p>Select species</p>              
-              <SpeciesDropdown onChange={e => addPageStore.selectCaracterSpecies(e.target.value)} />
+              <Dropdown 
+              onChange={e => addPageStore.selectCaracterSpecies(e.target.value)} 
+              options={() => dropdownStore.dropdown.map((e) => <option key={e.id} value={e.id}>{e.name}</option>)}
+              />
             </div>
           )
         }        

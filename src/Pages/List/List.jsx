@@ -36,7 +36,7 @@ const List = observer(() => {
           ? <p>loading.....</p>
           : (
             <div className="list">
-              <Filter />
+              <Filter select={listPageStore.mode === "list"}/>
               <Modes /> 
               <Table 
                 header={(listPgStore) => {

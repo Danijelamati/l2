@@ -28,7 +28,7 @@ class RootStore {
     this.newSpeciesStore = new NewSpeciesStore();
     this.newCaracterStore = new NewCaracterStore();
 
-    this.speciesStore = new DropdownStore();
+    this.dropdownStore = new DropdownStore();
 
   }
 };

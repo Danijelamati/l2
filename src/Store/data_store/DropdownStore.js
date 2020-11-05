@@ -1,8 +1,6 @@
 import { makeObservable, observable, action } from 'mobx';
 
-import firebase from '../../Common/util/firebase';
-
-export default class SpeciesStore {
+export default class DropdownStore {
     
     @observable dropdown;
 
@@ -12,17 +10,9 @@ export default class SpeciesStore {
     }
 
     @action
-    async setSpecies() {
-            
-        const db = firebase.firestore();
-
-        const arr = await db
-            .collection('species')
-            .orderBy('name')
-            .get();
-       
-        this.dropdown = arr.docs.map((d) => ({ ...d.data() }));        
-    }
+    setDropdown(array){
+        this.dropdown = array;
+    }    
 
     @action
     clean(){

@@ -1,5 +1,7 @@
 import { makeObservable, action, observable } from "mobx";
 
+import { getWholeCollection } from "../../Common/util/firebaseUtils";
+
 const initialState = {
     orderBy: 'id',
     reverse: false,
@@ -106,7 +108,7 @@ export default class ListPageStore{
        
         if(typeof this.listOptions.filter === "string"){     
             
-            this.listOptions.filter = [this.RootStore.speciesStore.findById(id)];
+            this.listOptions.filter = [this.RootStore.dropdownStore.findById(id)];
             this.listOptions.page = 1;
             this.RootStore.tableStore.firstPage(); 
             return;
@@ -126,17 +128,18 @@ export default class ListPageStore{
         }
        
         if(this.listOptions.filter.length === 10){            
-            this.listOptions.filter = [...this.listOptions.filter.slice(1), this.RootStore.speciesStore.findById(id)];
+            this.listOptions.filter = [...this.listOptions.filter.slice(1), this.RootStore.dropdownStore.findById(id)];
         }else{
-            this.listOptions.filter = [...this.listOptions.filter,this.RootStore.speciesStore.findById(id)];
+            this.listOptions.filter = [...this.listOptions.filter,this.RootStore.dropdownStore.findById(id)];
         }        
            
         this.listOptions.page = 1;
         this.RootStore.tableStore.firstPage(); 
     }
 
-    async setSpecies(){       
-        await this.RootStore.speciesStore.setSpecies();        
+    async setSpecies(){  
+        const collection = await getWholeCollection("species", "name");     
+        await this.RootStore.dropdownStore.setDropdown(collection);        
     }
 
     async manageMode(value){

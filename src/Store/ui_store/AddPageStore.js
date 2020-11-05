@@ -1,9 +1,8 @@
 import { makeObservable, observable, action } from "mobx";
 import { nanoid } from 'nanoid';
 
-import { saveWholeCaracter, findCaracterName} from '../../Common/util/saveCaracter';
 import { FullCaracter, Species } from '../../Common/models/models';
-import { findSpeciesName, saveSpecies } from '../../Common/util/saveSpecies';
+import { getWholeCollection, saveWholeCaracter, checkEntityName, saveDocument } from "../../Common/util/firebaseUtils";
 
 export default class AddPageStore {    
 
@@ -31,7 +30,8 @@ export default class AddPageStore {
         if(entity === "species"){
             this.RootStore.newSpeciesStore.initialise();
         }else{
-            await this.RootStore.speciesStore.setSpecies();
+            const collection = await getWholeCollection("species", "name");
+            await this.RootStore.dropdownStore.setDropdown(collection);
             this.RootStore.newCaracterStore.initialise();
         }
         this.setLoaded(true);
@@ -71,7 +71,7 @@ export default class AddPageStore {
         if(!id){
             return;
         }
-        this.RootStore.newCaracterStore.setSpecies(this.RootStore.speciesStore.findById(id));
+        this.RootStore.newCaracterStore.setSpecies(this.RootStore.dropdownStore.findById(id));
     }
 
     async handleSaveCaracter(){
@@ -83,7 +83,7 @@ export default class AddPageStore {
             return;
         }
 
-        const check = await findCaracterName(newCaracterStore.name);
+        const check = await checkEntityName("caracters", newCaracterStore.name);
         
         if(check){
             this.setError("Caracter with that name exists");
@@ -114,7 +114,7 @@ export default class AddPageStore {
             return;
         }
         
-        const found = await findSpeciesName(newSpeciesStore.name);
+        const found = await checkEntityName("caracters", newSpeciesStore.name);
     
         if(found){
             this.setError("Species with that name exists");
@@ -124,7 +124,7 @@ export default class AddPageStore {
         const newSpecies = new Species(nanoid(), newSpeciesStore.name, newSpeciesStore.abrv);        
         newSpecies.setFilter();
         
-        saveSpecies(newSpecies); 
+        saveDocument( "species" ,newSpecies); 
 
         listPageStore.resetOptions();
                 

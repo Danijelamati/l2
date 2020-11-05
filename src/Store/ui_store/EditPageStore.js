@@ -1,9 +1,8 @@
 import { action, makeObservable, observable } from 'mobx';
 
 import compareObjects from '../../Common/util/compareObjects';
-import { saveWholeCaracter, findCaracterName } from '../../Common/util/saveCaracter';
 import { FullCaracter, Species } from '../../Common/models/models';
-import { saveSpecies, findSpeciesName } from '../../Common/util/saveSpecies';
+import { getWholeCollection, saveDocument, checkEntityName, saveWholeCaracter } from '../../Common/util/firebaseUtils';
 
 export default class EditPageStore {
            
@@ -40,7 +39,7 @@ export default class EditPageStore {
         this.loaded = false;
         this.redirect = false;
         if(this.mode === "caracter"){
-            this.RootStore.speciesStore.clean();
+            this.RootStore.dropdownStore.clean();
         }
     }
     
@@ -52,7 +51,8 @@ export default class EditPageStore {
         
         if(value==="caracter"){
             this.RootStore.editCaracterStore.initialise(entity);
-            await this.RootStore.speciesStore.setSpecies();
+            const collection = await getWholeCollection("species", "name");
+            await this.RootStore.dropdownStore.setDropdown(collection);
         }
 
         this.setMode(value);  
@@ -79,7 +79,7 @@ export default class EditPageStore {
             return;
         }
 
-        const species = this.RootStore.speciesStore.findById(makeId);              
+        const species = this.RootStore.dropdownStore.findById(makeId);              
         if(!species){
             return;
         }
@@ -96,7 +96,7 @@ export default class EditPageStore {
             return;
         }
 
-        const check = await findCaracterName(editCaracterStore.editCaracter.name);
+        const check = await checkEntityName("caracters", editCaracterStore.editCaracter.name);
 
         if(check && propCaracter.name !== editCaracterStore.editCaracter.name){
           //name exists
@@ -132,7 +132,7 @@ export default class EditPageStore {
             return;
         }
 
-        const check = await findSpeciesName(editSpeciesStore.editedSpecies.name);
+        const check = await checkEntityName("species", editSpeciesStore.editedSpecies.name);
 
         if(check){
           //name exists
@@ -164,7 +164,7 @@ export default class EditPageStore {
         );
         newSpecie.setFilter(); 
 
-        saveSpecies(newSpecie);       
+        saveDocument("species",newSpecie);       
         
         listPageStore.resetOptions();        
         
